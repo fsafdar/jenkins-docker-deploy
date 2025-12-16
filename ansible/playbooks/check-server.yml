@@ -1,0 +1,6 @@
+- name:   check server health
+  hosts:  all
+  tasks:
+    - name: check uptime
+      command: uptime
+
