@@ -1,0 +1,35 @@
+- name: Manage nginx service
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Deploy a simple nginx config
+      copy:
+        dest: /etc/nginx/conf.d/devops-demo.conf
+        content: |
+          server {
+            listen 8085;
+            location / {
+              return 200 "nginx managed by ansible\n";
+            }
+          }
+      notify: Restart nginx
+
+    - name: Ensure nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+
